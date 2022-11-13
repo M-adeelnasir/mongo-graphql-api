@@ -6,7 +6,7 @@ export const jwtSign = async (
 ) => {
   const token = await jwt.sign(user, process.env.JWT_PRIVATE_KEY!, {
     ...(options && options),
-    algorithm: 'RS256',
+    // algorithm: 'RS256',
   });
   return token;
 };
@@ -18,4 +18,9 @@ export function verifyJwt<T>(token: string): T | null {
   } catch (err) {
     return null;
   }
+}
+
+export interface UserFromToken {
+  _id: string;
+  email: string;
 }

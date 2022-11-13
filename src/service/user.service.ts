@@ -26,7 +26,10 @@ export class UserService {
       throw new ApolloError('Invalid credentials');
     }
 
-    const token = await jwtSign({ email: user.email, _id: user.email });
+    const token = await jwtSign(
+      { email: user.email, _id: user._id },
+      { expiresIn: '1hr' }
+    );
 
     res.cookie('accessToken', token, {
       maxAge: 3.154e10, //1year

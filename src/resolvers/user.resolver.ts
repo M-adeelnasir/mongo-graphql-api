@@ -10,19 +10,14 @@ export default class UserResolver {
     this.userService = new UserService();
   }
 
-  @Query(() => User)
-  me() {
-    return {
-      _id: 'ksjkjs',
-      name: 'sdkjsk',
-      email: 'ksjdkdls',
-    };
+  @Query(() => User, { nullable: true })
+  me(@Ctx() { user }: Context) {
+    return user;
   }
 
   @Mutation(() => User, { nullable: true })
   async register(@Arg('input') input: UserRegisterInput): Promise<User | null> {
     const user = await this.userService.createUser(input);
-    console.log(user);
     return user;
   }
 

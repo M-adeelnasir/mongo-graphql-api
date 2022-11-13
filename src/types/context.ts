@@ -1,7 +1,7 @@
 import { Response, Request } from 'express';
-import { User } from '../schema/user.schema';
+import { UserFromToken } from '../utils/jwt';
 export interface Context {
   req: Request;
   res: Response;
-  userId: User['password'];
+  user: UserFromToken | null;
 }

@@ -4,12 +4,14 @@ import 'reflect-metadata';
 import express from 'express';
 import { buildSchema } from 'type-graphql';
 import { ApolloServer } from 'apollo-server-express';
-// import {
-//   ApolloServerPluginLandingPageGraphQLPlayground,
-//   ApolloServerPluginLandingPageProductionDefault,
-// } from 'apollo-server-core';
+import {
+  ApolloServerPluginLandingPageGraphQLPlayground,
+  ApolloServerPluginLandingPageProductionDefault,
+} from 'apollo-server-core';
 import mongo from './utils/mongo';
 import { resolvers } from './resolvers';
+import { verifyJwt, UserFromToken } from './utils/jwt';
+import { Context } from './types/context';
 
 const PORT = process.env.PORT;
 async function bootstrap() {
@@ -24,14 +26,20 @@ async function bootstrap() {
   //create apollo server
   const server = new ApolloServer({
     schema,
-    context: (ctx) => {
+    context: (ctx: Context) => {
+      if (ctx.req.headers.cookie?.split('=')[1]) {
+        const decoded = verifyJwt<UserFromToken>(
+          ctx.req.headers.cookie?.split('=')[1]
+        );
+        ctx.user = decoded;
+      }
       return ctx;
     },
-    // plugins: [
-    //   process.env.NODE_ENV === 'production'
-    //     ? ApolloServerPluginLandingPageProductionDefault()
-    //     : ApolloServerPluginLandingPageGraphQLPlayground(),
-    // ],
+    plugins: [
+      process.env.NODE_ENV === 'production'
+        ? ApolloServerPluginLandingPageProductionDefault()
+        : ApolloServerPluginLandingPageGraphQLPlayground(),
+    ],
   });
 
   await server.start();
