@@ -12,12 +12,14 @@ import mongo from './utils/mongo';
 import { resolvers } from './resolvers';
 import { verifyJwt, UserFromToken } from './utils/jwt';
 import { Context } from './types/context';
+import authChecker from './utils/authChecker';
 
 const PORT = process.env.PORT;
 async function bootstrap() {
   //   @ Build Schema
   const schema = await buildSchema({
     resolvers,
+    authChecker,
   });
 
   //   @ Initialize application

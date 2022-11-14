@@ -1,7 +1,7 @@
 import { Field, InputType, ObjectType } from 'type-graphql';
 import { prop, Ref, getModelForClass } from '@typegoose/typegoose';
 import { User } from './user.schema';
-// import { IsNumber, MaxLength, Min, MinLength } from 'class-validator';
+import { IsNumber, MaxLength, Min, MinLength } from 'class-validator';
 
 @ObjectType()
 export class Product {
@@ -30,21 +30,40 @@ export const ProductModel = getModelForClass<typeof Product>(Product);
 @InputType()
 export class CreateProductInput {
   @Field(() => String)
-  // @MaxLength(20, { message: 'Lenght must be less then 300' })
-  // @MinLength(5, { message: 'Lenght must be greater then 5' })
+  @MaxLength(20, { message: 'Lenght must be less then 300' })
+  @MinLength(5, { message: 'Lenght must be greater then 5' })
   title: string;
 
   createdBy: Ref<User>;
 
   @Field(() => String)
-  // @MaxLength(20, { message: 'Lenght must be less then 300' })
-  // @MinLength(5, { message: 'Lenght must be greater then 5' })
+  @MaxLength(20, { message: 'Lenght must be less then 300' })
+  @MinLength(5, { message: 'Lenght must be greater then 5' })
   description: string;
 
   @Field(() => Number)
-  // @IsNumber()
-  // @Min(1)
+  @IsNumber()
+  @Min(1)
   price: number;
+}
+@InputType()
+export class UpdateProductInput {
+  @Field(() => String, { nullable: true })
+  @MaxLength(20, { message: 'Lenght must be less then 300' })
+  @MinLength(5, { message: 'Lenght must be greater then 5' })
+  title?: string;
+
+  createdBy: Ref<User>;
+
+  @Field(() => String, { nullable: true })
+  @MaxLength(20, { message: 'Lenght must be less then 300' })
+  @MinLength(5, { message: 'Lenght must be greater then 5' })
+  description?: string;
+
+  @Field(() => Number, { nullable: true })
+  @IsNumber()
+  @Min(1)
+  price?: number;
 }
 
 @InputType()
@@ -52,3 +71,7 @@ export class GetProduct {
   @Field(() => String)
   _id: string;
 }
+
+export type Products = {
+  products: [Product];
+};

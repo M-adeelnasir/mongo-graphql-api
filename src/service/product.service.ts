@@ -2,6 +2,7 @@ import { User } from '../schema/user.schema';
 import {
   ProductModel,
   CreateProductInput,
+  UpdateProductInput,
   GetProduct,
 } from '../schema/product.schema';
 export class ProductService {
@@ -27,21 +28,25 @@ export class ProductService {
   }
   async getAllProductSrv() {
     const products = await ProductModel.find({}).lean();
+    console.log(products);
+
     return products;
   }
 
   async updateProductSrv(
     queryInput: GetProduct,
-    updateInput: CreateProductInput
+    updateInput: UpdateProductInput
   ) {
     try {
       const product = await ProductModel.findByIdAndUpdate(
-        { _id: queryInput },
+        { _id: queryInput._id },
         updateInput,
         { new: true, runValidators: true }
       ).lean();
       return product;
     } catch (err) {
+      console.log(err);
+
       return null;
     }
   }
